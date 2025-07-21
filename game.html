@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rock Paper Scissors</title>
+  <style>
+   body {
+        font-family: Arial, sans-serif;
+        background: url('pngtree-rock-paper-scissors-sitting-png-image_2489730.jpg') no-repeat center center fixed; 
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+
+    .container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background: url('eb19460c66005ebcda2a59f20b9725a9.jpg') no-repeat center center;
+  background-size: cover;
+  border-radius: 10px;
+  margin-top: 40px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+    .score-board {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .choices {
+      margin: 20px 0;
+    }
+    .choice-btn {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    .message {
+      font-size: 20px;
+      margin-top: 20px;
+    }
+    .rounds-select {
+      margin-bottom: 20px;
+    }
+    .history {
+      text-align: left;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Rock Paper Scissors</h1>
+
+    <div class="rounds-select">
+      <label for="rounds">Choose rounds: </label>
+      <select id="rounds">
+        <option value="5">Best of 5</option>
+        <option value="10">Best of 10</option>
+      </select>
+      <button onclick="startGame()">Start Game</button>
+    </div>
+
+    <div id="gameArea" style="display:none;">
+      <div class="score-board">
+        <div><strong>Player:</strong> <span id="playerScore">0</span></div>
+        <div><strong>Ties:</strong> <span id="tieScore">0</span></div>
+        <div><strong>Computer:</strong> <span id="computerScore">0</span></div>
+      </div>
+
+      <div class="choices">
+        <button class="choice-btn" onclick="play('rock')">Rock</button>
+        <button class="choice-btn" onclick="play('paper')">Paper</button>
+        <button class="choice-btn" onclick="play('scissors')">Scissors</button>
+      </div>
+
+      <div class="message" id="message"></div>
+      <div class="message" id="finalMessage"></div>
+
+      <div class="history" id="history"></div>
+    </div>
+  </div>
+
+  <script>
+    const options = ['rock', 'paper', 'scissors'];
+    let playerScore = 0, computerScore = 0, ties = 0, roundsToWin = 0, roundNumber = 0;
+
+    function startGame() {
+      playerScore = 0;
+      computerScore = 0;
+      ties = 0;
+      roundNumber = 0;
+      document.getElementById('playerScore').innerText = 0;
+      document.getElementById('computerScore').innerText = 0;
+      document.getElementById('tieScore').innerText = 0;
+      document.getElementById('history').innerHTML = '';
+      document.getElementById('message').innerText = '';
+      document.getElementById('finalMessage').innerText = '';
+      roundsToWin = parseInt(document.getElementById('rounds').value);
+      document.getElementById('gameArea').style.display = 'block';
+    }
+
+    function play(playerChoice) {
+      if (playerScore >= roundsToWin || computerScore >= roundsToWin) return;
+      const computerChoice = options[Math.floor(Math.random() * 3)];
+      let result = '';
+
+      if (playerChoice === computerChoice) {
+        ties++;
+        result = `Round ${roundNumber + 1}: It's a tie!`;
+      } else if (
+        (playerChoice === 'rock' && computerChoice === 'scissors') ||
+        (playerChoice === 'paper' && computerChoice === 'rock') ||
+        (playerChoice === 'scissors' && computerChoice === 'paper')
+      ) {
+        playerScore++;
+        result = `Round ${roundNumber + 1}: You win! ${playerChoice} beats ${computerChoice}`;
+      } else {
+        computerScore++;
+        result = `Round ${roundNumber + 1}: You lose! ${computerChoice} beats ${playerChoice}`;
+      }
+
+      roundNumber++;
+      document.getElementById('playerScore').innerText = playerScore;
+      document.getElementById('computerScore').innerText = computerScore;
+      document.getElementById('tieScore').innerText = ties;
+      document.getElementById('message').innerText = result;
+      document.getElementById('history').innerHTML += `<p>${result}</p>`;
+
+      if (playerScore >= roundsToWin || computerScore >= roundsToWin) {
+        document.getElementById('finalMessage').innerText =
+          playerScore > computerScore ? "Congratulations! You won the match." : "You lost the match. Try again!";
+      }
+    }  
+  </script>
+</body>
+</html>
